@@ -7,7 +7,7 @@ const dbConnect = require("./config/db");
 
 dbConnect()
 
-
+app.use(express.json());
 app.use(route)
 
 
