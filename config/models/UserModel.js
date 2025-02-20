@@ -8,7 +8,7 @@ const UserSchema= new Schema({
     email:{
         type:String,
         required:true,
-        unique:[true,"email uniqe"]
+        unique:[true,"email uniqe require"]
     },
     password:{
         type:String,
@@ -22,7 +22,17 @@ const UserSchema= new Schema({
         type:String,
         enum:["User","Admin"],
         default:"User"
+    },
+    otp:{
+        type:String
+    },
+
+    isVerifi:{
+        type:Boolean,
+        default:false
     }
-})
+},{
+    timestamps:true
+});
 
 module.exports=mongoose.model("user",UserSchema)
