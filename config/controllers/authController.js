@@ -8,8 +8,8 @@ async function signupController(req,res){
    
     const {name,email,password,phone,role}=req.body;
 
-    
-    return
+
+
     const otp=  otpGenerator.generate(6, { upperCaseAlphabets: false, specialChars: false });
     
     try {
@@ -36,6 +36,29 @@ async function signupController(req,res){
     }
 }
 
+async function loginControler(req,res){
+    const {email,password}=req.body
+   try {
+     const existinguser=await UserModel.findOne({email})
+
+     if (!existinguser) {
+        return res.status(404).json({succes:false,msg:"email is not found"})
+        
+     } else {
+        bcrypt.compare(password, existinguser.password,async function(err, result) {
+            const user=await UserModel.findOne({email}).select("-password")
+            if (result) {
+                return res.status(200).json({succes:true,msg:"login succesful",data:user})
+            } else {
+                return res.status(404).json({succes:false,msg:"invalid password"})
+            }
+        });
+     }
+   } catch (error) {
+    res.status(500).json({error : error.message? error.message :error ,succes:false})
+   }
+}
+
 async function verifiotpcontroller (req,res) {
     const {email,otp}=req.body
     try {
@@ -57,4 +80,4 @@ async function verifiotpcontroller (req,res) {
     }
     
 }
-module.exports={signupController,verifiotpcontroller}
+module.exports={signupController,loginControler,verifiotpcontroller}
