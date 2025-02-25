@@ -2,6 +2,7 @@ const { sendEmail } = require("../../helpers/SendEmail")
 const UserModel = require("../models/UserModel")
 const otpGenerator = require('otp-generator')
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 const { trace } = require("../../Route/auth");
 
 async function signupController(req,res){
@@ -48,6 +49,15 @@ async function loginControler(req,res){
         bcrypt.compare(password, existinguser.password,async function(err, result) {
             const user=await UserModel.findOne({email}).select("-password")
             if (result) {
+                if (existinguser.role== "user") {
+                    const token = jwt.sign({user}, 'shhhhh');
+                    return res.status(200).json({succes:true,msg:"user login succesful",data:user, token:token})
+
+                } else if (existinguser.role=="admin") {
+                    const token = jwt.sign({ user }, 'shhhhh');
+                    return res.status(200).json({succes:true,msg:"admin login succesful",data:user, token:token})
+                    
+                }
                 return res.status(200).json({succes:true,msg:"login succesful",data:user})
             } else {
                 return res.status(404).json({succes:false,msg:"invalid password"})
