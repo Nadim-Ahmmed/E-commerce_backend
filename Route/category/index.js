@@ -1,6 +1,6 @@
 const express=require("express")
 const multer  = require('multer')
-const { categorycontroller, fetchallcategorycontroller, singlecategorycontroller } = require("../../config/controllers/categorycontroller")
+const { categorycontroller, fetchallcategorycontroller, singlecategorycontroller, deletecategorycontroller } = require("../../config/controllers/categorycontroller")
 
 const route=express.Router()
 
@@ -27,6 +27,7 @@ route.post("/createcategory",upload.single('image'),categorycontroller)
 
 route.get("/allcategory",fetchallcategorycontroller)
 route.get("/singlecategory/:id",singlecategorycontroller)
+route.delete("/deletecategory/:id",deletecategorycontroller)
 
 
 

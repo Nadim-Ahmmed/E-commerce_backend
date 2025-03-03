@@ -1,4 +1,6 @@
+const fs = require("fs");
 const CategoryModel = require("../models/CategoryModel");
+const path=require("path")
 
  async function categorycontroller(req,res){
     let {titel,description}=req.body;
@@ -40,5 +42,26 @@ async function singlecategorycontroller(req,res){
     }
 }
 
+async function deletecategorycontroller(req,res) {
+   let {id}=req.params
+   let findcategory= await CategoryModel.findOne({_id:id})
+    if (!findcategory) {
+        return res.status(404).json({ msg: "category not found",succes:false}) 
+    } else {
+        let existingpath=path.join(__dirname,"../../uploads")
+        console.log(existingpath)
+        
+        let existingcategory= await CategoryModel.findOneAndDelete({_id:id})
 
-module.exports={categorycontroller,fetchallcategorycontroller,singlecategorycontroller}
+        let splitpath=existingcategory.image.split("/")
+        let imagepath=splitpath[splitpath.length-1]
+
+        fs.unlink(`${existingpath}/${imagepath}`,(error)=>{
+            console.log(error)
+        })
+
+         return res.status(201).json({ msg: "category deleted succesfully",succes:true,data:findcategory})
+    }
+  
+}
+module.exports={categorycontroller,fetchallcategorycontroller,singlecategorycontroller,deletecategorycontroller}
