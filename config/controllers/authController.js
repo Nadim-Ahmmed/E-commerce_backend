@@ -58,7 +58,7 @@ async function loginControler(req,res){
                     return res.status(200).json({succes:true,msg:"admin login succesful",data:user, token:token})
                     
                 }
-                return res.status(200).json({succes:true,msg:"login succesful",data:user})
+                // return res.status(200).json({succes:true,msg:"login succesful",data:user})
             } else {
                 return res.status(404).json({succes:false,msg:"invalid password"})
             }
