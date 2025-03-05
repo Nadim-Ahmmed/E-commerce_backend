@@ -49,7 +49,7 @@ async function deletecategorycontroller(req,res) {
         return res.status(404).json({ msg: "category not found",succes:false}) 
     } else {
         let existingpath=path.join(__dirname,"../../uploads")
-        console.log(existingpath)
+        
         
         let existingcategory= await CategoryModel.findOneAndDelete({_id:id})
 
@@ -64,4 +64,49 @@ async function deletecategorycontroller(req,res) {
     }
   
 }
-module.exports={categorycontroller,fetchallcategorycontroller,singlecategorycontroller,deletecategorycontroller}
+
+async function updatecategorycontroller(req,res){
+    let {id}=req.params
+    let{titel}=req.body
+    let {filename}=req.file;
+
+    try {
+        if(titel&&filename){
+
+            let existingpath=path.join(__dirname,"../../uploads")
+        
+        let existingcategory= await CategoryModel.findOneAndUpdate({_id:id},{image:`http://localhost:5000/${filename}`,titel})
+
+        let splitpath=existingcategory.image.split("/")
+        let imagepath=splitpath[splitpath.length-1]
+
+        fs.unlink(`${existingpath}/${imagepath}`,(error)=>{
+            console.log(error)
+        })
+
+         return res.status(201).json({ msg: "all category Update succesfully",succes:true,data:existingcategory})
+
+        }
+        else if (titel) {
+            let updatecategory = await CategoryModel.findOneAndUpdate({_id:id},{titel},{new:true});
+        return res.status(201).json({ msg: "update succesfully",succes:true,data:updatecategory})
+        } else if(filename){
+            let existingpath=path.join(__dirname,"../../uploads")
+        
+        let existingcategory= await CategoryModel.findOneAndUpdate({_id:id},{image:`http://localhost:5000/${filename}`})
+
+        let splitpath=existingcategory.image.split("/")
+        let imagepath=splitpath[splitpath.length-1]
+
+        fs.unlink(`${existingpath}/${imagepath}`,(error)=>{
+            console.log(error)
+        })
+
+         return res.status(201).json({ msg: "category Update succesfully",succes:true,data:existingcategory})
+        }
+        
+    } catch (error) {
+        return res.status(500).json({error : error.message? error.message :error ,succes:false})
+    }
+}
+module.exports={categorycontroller,fetchallcategorycontroller,singlecategorycontroller,deletecategorycontroller,updatecategorycontroller}
