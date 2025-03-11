@@ -1,5 +1,5 @@
 const express=require("express")
-const { createproductcontroller } = require("../../config/controllers/productcontroller")
+const { createproductcontroller, updateproductcontroller } = require("../../config/controllers/productcontroller")
 const multer = require("multer")
 const router=express.Router()
 
@@ -19,5 +19,6 @@ const storage = multer.diskStorage({
   const upload = multer({ storage: storage })
 
 router.post("/createproduct",upload.array("images",4),createproductcontroller)
+router.patch("/updateproduct/:id",upload.array("images",4),updateproductcontroller)
 
 module.exports=router
