@@ -12,6 +12,13 @@ const CategorySchema= new Schema({
    description:{
         type:String,
    },
+
+   product:[
+    {
+    type:mongoose.Schema.Types.ObjectId,
+    ref:"product"
+   },
+   ],
  
 },
 {

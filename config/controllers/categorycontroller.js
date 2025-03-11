@@ -3,7 +3,7 @@ const CategoryModel = require("../models/CategoryModel");
 const path=require("path")
 
  async function categorycontroller(req,res){
-    let {titel,description}=req.body;
+    let {titel,description,product}=req.body;
     let {filename}=req.file;
 
     try {
