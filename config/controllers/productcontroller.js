@@ -26,6 +26,15 @@ async function createproductcontroller(req,res) {
     
 }
 
+async function getallproductcontroller(req,res){
+try {
+    const products=await ProductModel.find({})
+    return res.status(201).json({ msg: "product create succesfully",succes:true, products})
+} catch (error) {
+    return res.status(500).json({error : error.message? error.message :error ,succes:false})
+}
+}
+
 async function updateproductcontroller(req,res) {
     
 
@@ -61,5 +70,36 @@ async function updateproductcontroller(req,res) {
     }
 }
 
+async function deleteproductcontroller(req,res) {
+ let {id}=req.params
+    try {
+       
+        let deletproduct= await ProductModel.findOne({_id:id})
 
-module.exports={createproductcontroller,updateproductcontroller,}
+        let existingpath=path.join(__dirname,"../uploads")
+        console.log(existingpath)
+
+
+      res.send(deletproduct)
+        return
+        deletproduct.image.forEach((imgpath)=> {
+            let splitpath=imgpath.split("/")
+        let imagepath=splitpath[splitpath.length-1]
+
+        fs.unlink(`${existingpath}/${imagepath}`,(error)=>{
+            console.log(error)
+        })
+
+        });
+        
+         return res.status(200).json({ msg: "category deleted succesfully",succes:true,data:deletproduct})
+    }
+  
+     catch (error) {
+        return res.status(500).json({error : error.message? error.message :error ,succes:false})
+    }
+   
+
+}
+
+module.exports={createproductcontroller,getallproductcontroller,updateproductcontroller,deleteproductcontroller,}
