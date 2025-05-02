@@ -71,28 +71,33 @@ async function updateproductcontroller(req,res) {
 }
 
 async function deleteproductcontroller(req,res) {
- let {id}=req.params
+     const {  id }=req.params;
+
+    
+
     try {
        
-        let deletproduct= await ProductModel.findOne({_id:id})
-
+        const deleteproduct= await ProductModel.findOneAndDelete({_id:id})
         let existingpath=path.join(__dirname,"../uploads")
-        console.log(existingpath)
-
-
-      res.send(deletproduct)
-        return
-        deletproduct.image.forEach((imgpath)=> {
-            let splitpath=imgpath.split("/")
-        let imagepath=splitpath[splitpath.length-1]
-
+       
+       deleteproduct.images.forEach((imgpath)=> {
+    
+        let splitpath=imgpath.split("/")
+    
+       let imagepath=splitpath[splitpath.length-1]
+        
         fs.unlink(`${existingpath}/${imagepath}`,(error)=>{
             console.log(error)
-        })
-
         });
+    
+        });
+// res.send("delet")
+        const findcatagory=await CategoryModel.findOneAndUpdate(
+            {product:id, },{$pull:{product:id}},{new:true}
+        )
+      await findcatagory.save();
         
-         return res.status(200).json({ msg: "category deleted succesfully",succes:true,data:deletproduct})
+         return res.status(200).json({ msg: "product deleted succesfully",succes:true,data:deleteproduct})
     }
   
      catch (error) {
@@ -102,4 +107,16 @@ async function deleteproductcontroller(req,res) {
 
 }
 
-module.exports={createproductcontroller,getallproductcontroller,updateproductcontroller,deleteproductcontroller,}
+async function singleproductcontroller(req,res){
+
+    const {  id }=req.params;
+    try {
+        const singleproduc= await ProductModel.findOne({_id:id})
+        return res.status(200).json({ msg: "singleproduct fetch succesfully",succes:true,product:singleproduc})
+    } catch (error) {
+        return res.status(500).json({error : error.message? error.message :error ,succes:false})
+    }
+
+}
+
+module.exports={createproductcontroller,getallproductcontroller,updateproductcontroller,deleteproductcontroller,singleproductcontroller}
