@@ -111,7 +111,7 @@ async function singleproductcontroller(req,res){
 
     const {  id }=req.params;
     try {
-        const singleproduc= await ProductModel.findOne({_id:id})
+        const singleproduc= await ProductModel.findOne({_id:id}).populate("category")
         return res.status(200).json({ msg: "singleproduct fetch succesfully",succes:true,product:singleproduc})
     } catch (error) {
         return res.status(500).json({error : error.message? error.message :error ,succes:false})
