@@ -4,14 +4,16 @@ const otpGenerator = require('otp-generator')
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const { trace } = require("../../Route/auth");
+const aleaRNGFactory = require("number-generator/lib/aleaRNGFactory");
 
 async function signupController(req,res){
    
     const {name,email,password,phone,role}=req.body;
 
+    const otp = aleaRNGFactory(Date.now()).uInt32().toString().substring(0,6);
+    
 
 
-    const otp=  otpGenerator.generate(6, { upperCaseAlphabets: false, specialChars: false });
     
     try {
         
