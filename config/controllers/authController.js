@@ -43,6 +43,7 @@ async function loginControler(req,res){
     const {email,password}=req.body
    try {
      const existinguser=await UserModel.findOne({email})
+     
 
      if (!existinguser) {
         return res.status(404).json({succes:false,msg:"email is not found"})
@@ -52,11 +53,11 @@ async function loginControler(req,res){
             const user=await UserModel.findOne({email}).select("-password")
             if (result) {
                 if (existinguser.role== "user") {
-                    const token = jwt.sign({user}, 'shhhhh');
-                    return res.status(200).json({succes:true,msg:"user login succesful",data:user, token:token})
+                    const token = jwt.sign({user}, process.env.JWT_Secret);
+                    return res.status(200).json({succes:true,msg:"user login succesful", data:user, token:token})
 
                 } else if (existinguser.role=="admin") {
-                    const token = jwt.sign({ user }, 'shhhhh');
+                    const token = jwt.sign({ user },  process.env.JWT_Secret);
                     return res.status(200).json({succes:true,msg:"admin login succesful",data:user, token:token})
                     
                 }
