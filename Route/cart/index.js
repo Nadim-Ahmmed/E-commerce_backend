@@ -1,5 +1,5 @@
 const express=require("express")
-const { addtocartcontroller, getusercartcontroller } = require("../../config/controllers/cartController")
+const { addtocartcontroller, getusercartcontroller, getusercartdeletedcontroller, updatecartquntitycontroller } = require("../../config/controllers/cartController")
 const { authCheckMiddelware } = require("../../middelware/authcheckmiddelware")
 
 const route=express.Router()
@@ -7,6 +7,8 @@ const route=express.Router()
 
 route.post("/addtocart",authCheckMiddelware,addtocartcontroller)
 route.get("/usercartlist/:id", getusercartcontroller)
+route.delete("/usercartdelete/:id",getusercartdeletedcontroller)
+route.patch("/updatecartquntity/:id",updatecartquntitycontroller)
 
 
 
