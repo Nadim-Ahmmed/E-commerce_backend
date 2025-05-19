@@ -7,7 +7,7 @@ const route=express.Router()
 
 route.post("/addtocart",authCheckMiddelware,addtocartcontroller)
 route.get("/usercartlist/:id", getusercartcontroller)
-route.delete("/usercartdelete/:id",getusercartdeletedcontroller)
+route.delete("/usercartdelete",getusercartdeletedcontroller)
 route.patch("/updatecartquntity/:id",updatecartquntitycontroller)
 
 

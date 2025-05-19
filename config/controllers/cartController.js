@@ -39,8 +39,13 @@ async function getusercartdeletedcontroller(req,res){
 async function updatecartquntitycontroller(req,res){
     try {
         let {id}=req.params
-       
+        let {type}=req.body
+       if(type=="inc"){
         await CartModel.findOneAndUpdate({_id:id},{$inc:{quntity:1}},{new:true});
+       }else{
+        await CartModel.findOneAndUpdate({_id:id},{$inc:{quntity:-1}},{new:true});
+       }
+        
         return res.status(200).json({ msg: " cart quntity succesfully",succes:true});
     } catch (error) {
         return res.status(500).json({error : error.message? error.message :error ,succes:false});
